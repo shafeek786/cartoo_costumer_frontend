@@ -21,7 +21,6 @@ export class ProductService {
   }
 
   getProductBySlug(slug: string): Observable<ProductModel> {
-    console.log(slug);
     return this.http.get<ProductModel>(
       `${this.baseUrl}/products/product/${slug}`
     );

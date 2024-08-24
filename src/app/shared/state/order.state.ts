@@ -22,6 +22,11 @@ export class OrderStateModel {
   };
   selectedOrder: Order | null;
   checkout: OrderCheckout | null;
+  paymentVerification = {
+    success: false,
+    data: null as any,
+    error: null as any,
+  };
 }
 
 @State<OrderStateModel>({
@@ -33,6 +38,11 @@ export class OrderStateModel {
     },
     selectedOrder: null,
     checkout: null,
+    paymentVerification: {
+      success: false,
+      data: null,
+      error: null,
+    },
   },
 })
 @Injectable()
@@ -83,10 +93,8 @@ export class OrderState {
     return this.orderService.getOrders().pipe(
       tap({
         next: (result) => {
-          console.log('order: ', result);
           const state = ctx.getState();
           const order = result.data.find((order) => order.order_number == id);
-          console.log('selected order: ', order, id);
           ctx.patchState({
             ...state,
             selectedOrder: order,
@@ -136,21 +144,13 @@ export class OrderState {
     return this.orderService.placeOrder(action.payload).pipe(
       tap({
         next: (result) => {
-          // After successfully placing the order, clear the cart
           this.store.dispatch(new ClearCart());
-          // Update the state with the new order details or whatever is necessary
           ctx.patchState({
             ...state,
-            selectedOrder: result.data, // Assuming the API returns the placed order details
+            selectedOrder: result.data,
           });
-
-          // Navigate to the order details page (using the returned order id)
-          this.router.navigateByUrl(
-            `/account/order/details/${result.data.order_number}`
-          );
         },
         error: (err) => {
-          // Handle error scenarios
           throw new Error(err?.error?.message);
         },
       })
@@ -159,12 +159,48 @@ export class OrderState {
 
   @Action(RePayment)
   verifyPayment(ctx: StateContext<OrderStateModel>, action: RePayment) {
-    // Verify Payment Logic Here
+    return this.orderService.verifyPayment(action.payload).pipe(
+      tap({
+        next: (result) => {
+          console.log('repayment');
+          // Handle success, update state if needed
+        },
+        error: (err) => {
+          // Handle error
+          throw new Error(err.message);
+        },
+      })
+    );
   }
 
   @Action(VerifyPayment)
   rePayment(ctx: StateContext<OrderStateModel>, action: VerifyPayment) {
-    // Re Payment Logic Here
+    return this.orderService.verifyPayment(action.payload).pipe(
+      tap({
+        next: (result) => {
+          // Handle success
+          console.log('Payment verification successful', result);
+          ctx.patchState({
+            paymentVerification: {
+              success: true,
+              data: result,
+              error: null,
+            },
+          });
+        },
+        error: (err) => {
+          // Handle error
+          console.error('Payment verification failed', err);
+          ctx.patchState({
+            paymentVerification: {
+              success: false,
+              data: null,
+              error: err.message,
+            },
+          });
+        },
+      })
+    );
   }
 
   @Action(Clear)

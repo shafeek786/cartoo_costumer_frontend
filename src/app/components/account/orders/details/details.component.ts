@@ -45,6 +45,7 @@ export class OrderDetailsComponent {
         takeUntil(this.destroy$)
       )
       .subscribe((order) => {
+        console.log('order detail: ', order);
         this.order = order!;
       });
   }

@@ -1,11 +1,12 @@
 <!-- Category Style Vertical -->
-<div class="category-menu section-b-space" *ngIf="categories?.length && style == 'vertical'">
+<div class="category-menu section-b-space" *ngIf="categories && style == 'vertical'">
   <h3>{{ title ? title : 'categories' | translate }}</h3>
   <ul>
     <li *ngFor="let category of categories">
       <div class="category-list">
-        <img [src]="category?.category_icon ? category?.category_icon?.original_url : 'assets/images/category.png'"
-             [alt]="category?.name">
+        <img
+          [src]=" category?.category_icon ? (admin_file_url + category?.category_icon?.original_url) : 'assets/images/category.png'"
+          [alt]="category?.name">
         <h5>
           <a href="javascript:void(0)" (click)="redirectToCollection(category.slug!)">{{ category?.name }}</a>
         </h5>
@@ -20,12 +21,11 @@
     <li class="nav-item" *ngFor="let category of categories">
       <app-button
         [class]="selectedCategorySlug.length && selectedCategorySlug.includes(category.slug!) ? 'nav-link active' : 'nav-link'"
-        [id]="'nav_link_btn'"
-        [spinner]="false"
-        (click)="redirectToCollection(category.slug!)">
+        [id]="'nav_link_btn'" [spinner]="false" (click)="redirectToCollection(category.slug!)">
         {{ category.name }}
-        <img [src]="category?.category_icon ? category?.category_icon?.original_url : 'assets/images/category.png'"
-             [alt]="category?.name">
+        <img
+          [src]="admin_file_url + category?.category_icon ? category?.category_icon?.original_url : 'assets/images/category.png'"
+          [alt]="category?.name">
       </app-button>
     </li>
   </ul>
@@ -36,27 +36,28 @@
   <owl-carousel-o [options]="sliderOption">
     <ng-template carouselSlide *ngFor="let category of categories">
       <div *ngIf="theme == 'paris'">
-        <a href="javascript:void(0)"
-          (click)="redirectToCollection(category.slug!)"
-          class="category-box category-dark"
+        <a href="javascript:void(0)" (click)="redirectToCollection(category.slug!)" class="category-box category-dark"
           [class.active]="selectedCategorySlug.length && selectedCategorySlug.includes(category.slug!)">
-          <img [src]="image ? image : 'assets/images/shape.png'" class="background-image" alt="shape">
-          <img [src]="category?.category_icon ? category?.category_icon?.original_url : 'assets/images/category.png'"
-               [alt]="category?.name">
+          <img [src]=" image ? image : 'assets/images/shape.png'" class="background-image" alt="shape">
+
+          <img
+            [src]="category?.category_icon?.original_url ? (admin_file_url + category?.category_icon?.original_url) : 'assets/images/category.png'"
+            [alt]="category?.name">
+
           <h5>{{ category.name }}</h5>
         </a>
       </div>
       <div *ngIf="theme == 'madrid'">
         <div class="category-box-list">
           <a href="javascript:void(0)" (click)="redirectToCollection(category.slug!)" class="category-name">
-              <h4>{{ category.name }}</h4>
-              <h6>{{ category.products_count }} {{ 'items' | translate }}</h6>
+            <h4>{{ category.name }}</h4>
+            <h6>{{ category.products_count }} {{ 'items' | translate }}</h6>
           </a>
           <div class="category-box-view">
             <a href="javascript:void(0)" (click)="redirectToCollection(category.slug!)">
-              <img [src]="category?.category_image ? category?.category_image?.original_url : 'assets/images/category.png'"
-                   class="img-fluid"
-                   [alt]="category?.name">
+              <img
+                [src]="admin_file_url + category?.category_image ? category?.category_image?.original_url : 'assets/images/category.png'"
+                class="img-fluid" [alt]="category?.name">
             </a>
             <app-button [class]="'btn shop-button'" [id]="'shop_now_btn'" [spinner]="false">
               <span>{{ 'shop_now' | translate }}</span>
@@ -67,13 +68,14 @@
       </div>
       <div *ngIf="theme == 'rome'">
         <div class="shop-category-box border-0">
-            <a href="javascript:void(0)" (click)="redirectToCollection(category.slug!)" class="circle-1">
-              <img [src]="category?.category_image ? category?.category_image?.original_url : 'assets/images/category.png'"
-                   [alt]="category?.name">
-            </a>
-            <div class="category-name">
-              <h6>{{ category.name }}</h6>
-            </div>
+          <a href="javascript:void(0)" (click)="redirectToCollection(category.slug!)" class="circle-1">
+            <img
+              [src]="admin_file_url + category?.category_image ? category?.category_image?.original_url : 'assets/images/category.png'"
+              [alt]="category?.name">
+          </a>
+          <div class="category-name">
+            <h6>{{ category.name }}</h6>
+          </div>
         </div>
       </div>
     </ng-template>
@@ -86,13 +88,14 @@
     <ng-template carouselSlide *ngFor="let category of categories">
       <div>
         <div class="shop-category-box border-0 wow fadeIn">
-            <a href="javascript:void(0)" (click)="redirectToCollection(category.slug!)" class="circle-1">
-              <img [src]="category?.category_icon ? category?.category_icon?.original_url : 'assets/images/category.png'"
-                   [alt]="category?.name">
-            </a>
-            <div class="category-name">
-              <h6>{{ category.name }}</h6>
-            </div>
+          <a href="javascript:void(0)" (click)="redirectToCollection(category.slug!)" class="circle-1">
+            <img
+              [src]="admin_file_url + category?.category_icon ? category?.category_icon?.original_url : 'assets/images/category.png'"
+              [alt]="category?.name">
+          </a>
+          <div class="category-name">
+            <h6>{{ category.name }}</h6>
+          </div>
         </div>
       </div>
     </ng-template>
@@ -102,11 +105,8 @@
 <!-- Category Style Filter -->
 <ul class="nav nav-tabs tab-style-color-2 tab-style-color" *ngIf="categories?.length && style == 'filter'">
   <li class="nav-item" *ngFor="let category of categories">
-    <app-button
-      [class]="selectedCategoryId == category.id ? 'nav-link btn active' : 'nav-link btn' "
-      [spinner]="false"
-      [id]="'category'+category.id"
-      (click)="selectCategory(category.id)">
+    <app-button [class]="selectedCategoryId == category.id ? 'nav-link btn active' : 'nav-link btn' " [spinner]="false"
+      [id]="'category'+category.id" (click)="selectCategory(category.id)">
       {{category?.name}}
     </app-button>
   </li>
@@ -116,20 +116,18 @@
 <ul class="category-list" *ngIf="categories?.length && style == 'dropdown'">
   <li class="onhover-category-list" *ngFor="let category of categories">
     <a href="javascript:void(0)" (click)="redirectToCollection(category.slug!)" class="category-name">
-      <img [src]="category?.category_icon ? category?.category_icon?.original_url : 'assets/images/category.png'" [alt]="category?.name">
+      <img
+        [src]="category?.category_icon ? (admin_file_url + category?.category_icon?.original_url) : 'assets/images/category.png'"
+        [alt]="category?.name">
       <h6>{{ category?.name }}</h6>
     </a>
   </li>
 </ul>
 
 <!-- Input Category Dropdown -->
-<app-button
-  [class]="'btn location-button'"
-  [id]="'category_btn'"
-  [spinner]="false"
-  [type]="'button'"
+<app-button [class]="'btn location-button'" [id]="'category_btn'" [spinner]="false" [type]="'button'"
   *ngIf="categories?.length && style == 'input_dropdown'">
- <select class="form-select locat-name">
+  <select class="form-select locat-name">
     <option>{{ 'all_category' | translate }}</option>
     <option *ngFor="let category of categories">
       {{ category.name }}

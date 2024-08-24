@@ -8,24 +8,25 @@ import { GetNotification } from '../../shared/action/notification.action';
 @Component({
   selector: 'app-account',
   templateUrl: './account.component.html',
-  styleUrls: ['./account.component.scss']
+  styleUrls: ['./account.component.scss'],
 })
 export class AccountComponent {
-
   @Select(LoaderState.status) loadingStatus$: Observable<boolean>;
 
   public open: boolean = false;
   public breadcrumb: Breadcrumb = {
-    title: "Dashboard",
-    items: [{ label: 'Dashboard', active: false }]
+    title: 'Dashboard',
+    items: [{ label: 'Dashboard', active: false }],
   };
 
   constructor(private store: Store) {
+    this.loadingStatus$.subscribe((r) => {
+      console.log('loading: ', r);
+    });
     this.store.dispatch(new GetNotification());
   }
 
-  openMenu(value: any){
+  openMenu(value: any) {
     this.open = value;
   }
-
 }

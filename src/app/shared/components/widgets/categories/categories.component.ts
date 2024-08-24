@@ -5,14 +5,14 @@ import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { Category, CategoryModel } from '../../../interface/category.interface';
 import { CategoryState } from '../../../state/category.state';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-categories',
   templateUrl: './categories.component.html',
-  styleUrls: ['./categories.component.scss']
+  styleUrls: ['./categories.component.scss'],
 })
 export class CategoriesComponent {
-
   @Select(CategoryState.category) category$: Observable<CategoryModel>;
 
   @Input() categoryIds: number[] = [];
@@ -26,20 +26,32 @@ export class CategoriesComponent {
 
   @Output() selectedCategory: EventEmitter<number> = new EventEmitter();
 
+  public admin_file_url = environment.bannerUrl;
   public categories: Category[];
   public selectedCategorySlug: string[] = [];
 
-  constructor(private route: ActivatedRoute,
-    private router: Router) {
-    this.category$.subscribe(res => this.categories = res.data.filter(category => category.type == 'product'));
-    this.route.queryParams.subscribe(params => {
-      this.selectedCategorySlug = params['category'] ? params['category'].split(',') : [];
+  constructor(private route: ActivatedRoute, private router: Router) {
+    this.category$.subscribe(
+      (res) =>
+        (this.categories = res.data.filter(
+          (category) => category.type == 'product'
+        ))
+    );
+    this.route.queryParams.subscribe((params) => {
+      this.selectedCategorySlug = params['category']
+        ? params['category'].split(',')
+        : [];
     });
   }
 
   ngOnChanges() {
-    if(this.categoryIds && this.categoryIds.length) {
-      this.category$.subscribe(res => this.categories = res.data.filter(category => this.categoryIds?.includes(category.id)));
+    if (this.categoryIds && this.categoryIds.length) {
+      this.category$.subscribe(
+        (res) =>
+          (this.categories = res.data.filter((category) =>
+            this.categoryIds?.includes(category.id)
+          ))
+      );
     }
   }
 
@@ -49,19 +61,18 @@ export class CategoriesComponent {
 
   redirectToCollection(slug: string) {
     let index = this.selectedCategorySlug.indexOf(slug);
-    if(index === -1)
-      this.selectedCategorySlug.push(slug);
-    else
-      this.selectedCategorySlug.splice(index,1);
+    if (index === -1) this.selectedCategorySlug.push(slug);
+    else this.selectedCategorySlug.splice(index, 1);
 
     this.router.navigate(['/collections'], {
       relativeTo: this.route,
       queryParams: {
-        category: this.selectedCategorySlug.length ? this.selectedCategorySlug.join(',') : null
+        category: this.selectedCategorySlug.length
+          ? this.selectedCategorySlug.join(',')
+          : null,
       },
       queryParamsHandling: 'merge', // preserve the existing query params in the route
-      skipLocationChange: false  // do trigger navigation
+      skipLocationChange: false, // do trigger navigation
     });
   }
-
 }

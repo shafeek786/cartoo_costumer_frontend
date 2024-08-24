@@ -71,7 +71,6 @@ export class ProductContainComponent {
   }
 
   selectVariation(variation: Variation) {
-    console.log('variants');
     this.selectedVariation = variation;
   }
 
@@ -83,23 +82,18 @@ export class ProductContainComponent {
 
   checkStockAvailable() {
     if (this.selectedVariation) {
-      console.log('stock');
       this.selectedVariation['stock_status'] =
         this.selectedVariation?.quantity < this.productQty
           ? 'out_of_stock'
           : 'in_stock';
     } else {
-      console.log('out stock');
-
       this.product['stock_status'] =
         this.product?.quantity < this.productQty ? 'out_of_stock' : 'in_stock';
     }
   }
 
   addToCart(product: Product) {
-    console.log('cart');
     if (product) {
-      console.log('product quantity: ', this.productQty);
       const params: CartAddOrUpdate = {
         id: this.cartItem ? this.cartItem.id : null,
         product_id: product?._id,

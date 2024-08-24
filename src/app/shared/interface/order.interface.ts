@@ -9,9 +9,11 @@ import { TransactionsData } from './wallet.interface';
 
 export interface OrderModel extends PaginateModel {
   data: Order[];
+  count: number;
 }
 
 export interface Order {
+  count: number;
   id: number;
   order_id: string;
   order_number: number;

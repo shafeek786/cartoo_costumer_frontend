@@ -4,17 +4,16 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ThemeService {
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getHomePage(slug?: string): Observable<any> {
-    if(!slug) {
+    if (!slug) {
       slug = 'paris';
     }
-    return this.http.get(`${environment.URL}/themes/${slug}.json`);
+    // return this.http.get(`${environment.URL}/themes/${slug}.json`);
+    return this.http.get(`${environment.baseURL}/admin_banner`);
   }
-
 }

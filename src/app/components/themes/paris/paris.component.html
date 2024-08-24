@@ -27,15 +27,12 @@
             </ng-container>
 
             <!-- Sidebar Vertical Banner -->
-            <app-theme-banner
-              [class]="'ratio_156 section-t-space'"
-              [style]="'vertical'"
+            <app-theme-banner [class]="'ratio_156 section-t-space'" [style]="'vertical'"
               [banners]="data?.content?.main_content?.sidebar?.left_side_banners?.banner_1">
             </app-theme-banner>
 
             <!-- Sidebar Vertical Banner -->
-            <app-theme-banner
-              [class]="'ratio_medium section-t-space'" [style]="'vertical'"
+            <app-theme-banner [class]="'ratio_medium section-t-space'" [style]="'vertical'"
               [banners]="data?.content?.main_content?.sidebar?.left_side_banners?.banner_2">
             </app-theme-banner>
 
@@ -45,8 +42,7 @@
               <div class="section-t-space">
                 <div class="category-menu">
                   <h3>{{ data?.content?.main_content?.sidebar?.sidebar_products?.title }}</h3>
-                  <app-theme-product
-                    [style]="'vertical'"
+                  <app-theme-product [style]="'vertical'"
                     [productIds]="data?.content?.main_content?.sidebar?.sidebar_products?.product_ids || []">
                   </app-theme-product>
                 </div>
@@ -62,15 +58,12 @@
           <!-- Top Save Today Section Start -->
           <ng-container *ngIf="data?.content?.main_content?.section1_products?.status &&
             data?.content?.main_content?.section1_products?.product_ids?.length || 0 >= 5">
-            <app-title
-              [title]="data?.content?.main_content?.section1_products?.title"
+            <app-title [title]="data?.content?.main_content?.section1_products?.title"
               [description]="data?.content?.main_content?.section1_products?.description">
             </app-title>
             <div class="section-b-space">
-              <app-theme-product
-                [productIds]="data?.content?.main_content?.section1_products?.product_ids || []"
-                [slider]="true"
-                [style]="'horizontal'">
+              <app-theme-product [productIds]="data?.content?.main_content?.section1_products?.product_ids || []"
+                [slider]="true" [style]="'horizontal'">
               </app-theme-product>
             </div>
           </ng-container>
@@ -79,16 +72,13 @@
           <!-- Categories Section Start-->
           <ng-container *ngIf="data?.content?.main_content?.section2_categories_list?.status">
             <div>
-              <app-title
-                [title]="data?.content?.main_content?.section2_categories_list?.title"
+              <app-title [title]="data?.content?.main_content?.section2_categories_list?.title"
                 [description]="data?.content?.main_content?.section2_categories_list?.description">
               </app-title>
-              <app-theme-categories
-                [sliderOption]="categorySlider"
+              <app-theme-categories [sliderOption]="categorySlider"
                 [image]="data?.content?.main_content?.section2_categories_list?.image_url!"
                 [categoryIds]="data?.content?.main_content?.section2_categories_list?.category_ids || []"
-                [theme]="'paris'"
-                [style]="'horizontal'">
+                [theme]="'paris'" [style]="'horizontal'">
               </app-theme-categories>
             </div>
           </ng-container>
@@ -120,15 +110,12 @@
           <!-- Section Start -->
           <ng-container *ngIf="data?.content?.main_content?.section4_products?.status &&
             data?.content?.main_content?.section4_products?.product_ids?.length || 0 >= 5">
-            <app-title
-              [title]="data?.content?.main_content?.section4_products?.title"
+            <app-title [title]="data?.content?.main_content?.section4_products?.title"
               [description]="data?.content?.main_content?.section4_products?.description">
             </app-title>
             <div class="section-b-space">
-              <app-theme-product
-                [productIds]="data?.content?.main_content?.section4_products?.product_ids || []"
-                [slider]="true"
-                [style]="'horizontal'">
+              <app-theme-product [productIds]="data?.content?.main_content?.section4_products?.product_ids || []"
+                [slider]="true" [style]="'horizontal'">
               </app-theme-product>
             </div>
           </ng-container>
@@ -137,9 +124,7 @@
           <!-- Coupons Banner Section Start -->
           <ng-container *ngIf="data?.content?.main_content?.section5_coupons?.status">
             <div class="section-b-space ratio_12">
-              <app-theme-banner
-                class="sale-banner"
-                [banners]="data?.content?.main_content?.section5_coupons"
+              <app-theme-banner class="sale-banner" [banners]="data?.content?.main_content?.section5_coupons"
                 [style]="'full_width'">
               </app-theme-banner>
             </div>
@@ -152,8 +137,7 @@
               <div class="row g-md-4 g-3">
                 <div class="col-xxl-8 col-xl-12 col-md-7">
                   <div class="banner-contain hover-effect">
-                    <app-image-link
-                      [image]="data?.content?.main_content?.section6_two_column_banners?.banner_1"
+                    <app-image-link [image]="data?.content?.main_content?.section6_two_column_banners?.banner_1"
                       [bgImage]="false">
                     </app-image-link>
                   </div>
@@ -173,12 +157,10 @@
           <!-- Our Best Seller Section Start -->
           <ng-container *ngIf="data?.content?.main_content?.section4_products?.status &&
             data?.content?.main_content?.section7_products?.product_ids?.length || 0 >= 3">
-            <app-title
-              [title]="data?.content?.main_content?.section7_products?.title"
+            <app-title [title]="data?.content?.main_content?.section7_products?.title"
               [description]="data?.content?.main_content?.section7_products?.description">
             </app-title>
-            <app-theme-product
-              [productIds]="data?.content?.main_content?.section7_products?.product_ids || []"
+            <app-theme-product [productIds]="data?.content?.main_content?.section7_products?.product_ids || []"
               [style]="'classic'">
             </app-theme-product>
           </ng-container>
@@ -198,12 +180,10 @@
           <!-- Blogs Section Start -->
           <ng-container *ngIf="data?.content?.main_content?.section9_featured_blogs?.status &&
             data?.content?.main_content?.section9_featured_blogs?.blog_ids?.length || 0 >= 3">
-            <app-title
-              [title]="data?.content?.main_content?.section9_featured_blogs?.title"
+            <app-title [title]="data?.content?.main_content?.section9_featured_blogs?.title"
               [description]="data?.content?.main_content?.section9_featured_blogs?.description">
             </app-title>
-            <app-blog
-              [blogIds]="data?.content?.main_content?.section9_featured_blogs?.blog_ids || []">
+            <app-blog [blogIds]="data?.content?.main_content?.section9_featured_blogs?.blog_ids || []">
             </app-blog>
           </ng-container>
           <!-- Blogs Section End -->

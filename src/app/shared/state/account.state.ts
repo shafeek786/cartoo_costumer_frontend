@@ -49,7 +49,6 @@ export class AccountState {
     return this.accountService.getUserDetails().pipe(
       tap({
         next: (result) => {
-          console.log('address: ', result);
           ctx.patchState({
             user: result,
             permissions: result.permission,

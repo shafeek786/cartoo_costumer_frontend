@@ -23,11 +23,20 @@ import { AddressModalComponent } from '../../../shared/components/widgets/modal/
 import { Cart } from '../../../shared/interface/cart.interface';
 import { SettingState } from '../../../shared/state/setting.state';
 import { GetSettingOption } from '../../../shared/action/setting.action';
-import { OrderCheckout } from '../../../shared/interface/order.interface';
+import {
+  OrderCheckout,
+  Order,
+} from '../../../shared/interface/order.interface';
+import { VerifyPayment } from '../../../shared/action/order.action';
 import {
   Values,
   DeliveryBlock,
 } from '../../../shared/interface/setting.interface';
+import { NotificationService } from 'src/app/shared/services/notification.service';
+import { environment } from 'src/environments/environment';
+import { Router } from '@angular/router';
+
+declare var Razorpay: any;
 
 @Component({
   selector: 'app-checkout',
@@ -60,7 +69,12 @@ export class CheckoutComponent {
   public ch_sub_total: number;
   public ch_total: number;
 
-  constructor(private store: Store, private formBuilder: FormBuilder) {
+  constructor(
+    private store: Store,
+    private formBuilder: FormBuilder,
+    private notificationService: NotificationService,
+    private router: Router
+  ) {
     this.store.dispatch(new GetCartItems());
     this.store.dispatch(new GetSettingOption());
 
@@ -83,10 +97,7 @@ export class CheckoutComponent {
   }
 
   ngOnInit() {
-    console.log('check address');
-    this.user$.subscribe((data) => {
-      console.log('user: ', data.data);
-    });
+    this.user$.subscribe((data) => {});
     this.checkout$.subscribe((data) => (this.checkoutTotal = data));
 
     this.cartItem$.subscribe((items) => {
@@ -128,9 +139,7 @@ export class CheckoutComponent {
   }
 
   selectShippingAddress(id: string) {
-    console.log('shipping ID: ', id);
     if (id) {
-      console.log('set');
       this.form.controls['shipping_address_id'].setValue(id);
       this.checkout();
     }
@@ -152,9 +161,7 @@ export class CheckoutComponent {
   }
 
   selectPaymentMethod(value: string) {
-    console.log(this.form.value);
     if (this.form.invalid) {
-      console.log('Invalid controls:', this.form.controls);
     }
     this.form.controls['payment_method'].setValue(value);
     this.checkout();
@@ -223,19 +230,83 @@ export class CheckoutComponent {
 
   placeorder() {
     console.log(this.form.value);
-    if (this.form.invalid) {
-      console.log('Invalid controls:', this.form.controls);
-    }
     if (this.form.valid) {
-      console.log('Form is valid, proceeding with order placement...');
       if (this.cpnRef && !this.cpnRef.nativeElement.value) {
         this.form.controls['coupon'].reset();
       }
-      this.store.dispatch(new PlaceOrder(this.form.value));
-    } else {
-      console.log('Form is not valid:', this.form.errors);
-      console.log('Form controls:', this.form.controls);
+
+      // Step 1: Place the order (calls backend)
+      this.store.dispatch(new PlaceOrder(this.form.value)).subscribe({
+        next: (orderResponse) => {
+          console.log('Order Response:', orderResponse);
+
+          // Check if `orderResponse` contains the necessary details
+          const orderData = orderResponse?.order.selectedOrder; // Adjust based on actual response structure
+
+          if (orderData) {
+            console.log('Order Data:', orderData);
+
+            // Step 2: Configure Razorpay options
+            const options = {
+              key: environment.razorpayKey,
+              amount: orderData.total, // Amount in paisa
+              currency: 'INR',
+              name: 'Cartoo',
+              description: 'Order Payment',
+              order_id: orderData.order_number, // The order ID returned from your backend
+              handler: (response: any) => {
+                // Step 4: On successful payment, verify the payment
+                this.verifyPayment(response);
+              },
+              prefill: {
+                name: 'Customer Name',
+                email: 'customer@example.com',
+                contact: '9999999999',
+              },
+              theme: {
+                color: '#3399cc',
+              },
+            };
+
+            // Step 3: Open Razorpay checkout
+            const razorpay = new Razorpay(options);
+            razorpay.open();
+          } else {
+            console.error('Order data is undefined');
+          }
+        },
+        error: (err) => {
+          console.error('Error placing order:', err);
+        },
+      });
     }
+  }
+
+  verifyPayment(paymentResponse: any) {
+    console.log('verify');
+    const verificationPayload = {
+      razorpay_order_id: paymentResponse.razorpay_order_id,
+      razorpay_payment_id: paymentResponse.razorpay_payment_id,
+
+      razorpay_signature: paymentResponse.razorpay_signature,
+    };
+    this.router.navigateByUrl(
+      `/account/order/details/${paymentResponse.razorpay_order_id}`
+    );
+    // Step 5: Call backend to verify payment
+    this.store.dispatch(new VerifyPayment(verificationPayload)).subscribe({
+      next: (verificationResult) => {
+        if (verificationResult.order.paymentVerification.success) {
+          this.notificationService.showSuccess('payment success');
+        } else {
+          // Handle payment verification failure
+          this.notificationService.showError('payment failed');
+        }
+      },
+      error: (err) => {
+        console.error('Payment verification error:', err);
+      },
+    });
   }
 
   ngOnDestroy() {

@@ -84,9 +84,7 @@ export class AddressModalComponent {
           (country) => country.value === +data?.value
         );
         if (selectedCountry) {
-          console.log('Selected Country:', selectedCountry);
           this.form.controls['country'].setValue(selectedCountry.label);
-          console.log('Form Value:', this.form.value);
         }
       });
       if (!this.address) this.form.controls['state_id'].setValue('');
@@ -150,7 +148,6 @@ export class AddressModalComponent {
 
   submit() {
     this.form.markAllAsTouched();
-    console.log('Form Values Before Submission:', this.form.value);
 
     if (this.form.valid) {
       const selectedCountryName = this.form.value.country;
@@ -161,21 +158,15 @@ export class AddressModalComponent {
         );
 
         if (country) {
-          console.log('Country:', country);
           const states = country.state || [];
-          console.log('States:', states);
 
           const selectedState = states.find(
             (state) => state.id === this.form.value.state_id
           );
 
           if (selectedState) {
-            console.log('Selected State:', selectedState.name);
-
             // Update form controls
             this.form.controls['state_name'].setValue(selectedState.name);
-
-            console.log('Updated Form Values:', this.form.value);
 
             // Delay form submission to ensure updates are processed
             setTimeout(() => {
@@ -201,8 +192,6 @@ export class AddressModalComponent {
           console.warn('Country not found');
         }
       });
-    } else {
-      console.warn('Form is not valid');
     }
   }
 

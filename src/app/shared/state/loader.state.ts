@@ -1,6 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { HideLoaderAction, ShowLoaderAction, ShowButtonSpinnerAction, HideButtonSpinnerAction } from '../action/loader.action';
+import { ContentOsaka } from '../interface/theme.interface';
+import {
+  HideLoaderAction,
+  ShowLoaderAction,
+  ShowButtonSpinnerAction,
+  HideButtonSpinnerAction,
+} from '../action/loader.action';
 
 export class LoaderStateModel {
   public status?: boolean;
@@ -15,13 +21,11 @@ export class LoaderStateModel {
     status: false,
     loadingCount: 0,
     button_spinner: false,
-    button_id: null
-  }
+    button_id: null,
+  },
 })
-
 @Injectable()
 export class LoaderState {
-
   @Selector()
   public static status(state: LoaderStateModel) {
     return state.status;
@@ -38,23 +42,27 @@ export class LoaderState {
   }
 
   @Action(ShowLoaderAction)
-  public showLoaderAction(ctx: StateContext<LoaderStateModel>, action: ShowLoaderAction) {
+  public showLoaderAction(
+    ctx: StateContext<LoaderStateModel>,
+    action: ShowLoaderAction
+  ) {
     const state = ctx.getState();
-    const count = state?.loadingCount ? state?.loadingCount : 0;
-    ctx.patchState({ status: action?.loading, loadingCount: count + 1 });
+    const count = state.loadingCount + 1;
+    ctx.patchState({ status: true, loadingCount: count });
   }
 
   @Action(HideLoaderAction)
   public hideLoaderAction(ctx: StateContext<LoaderStateModel>) {
     const state = ctx.getState();
-    ctx.patchState({  
-      status: state?.loadingCount === 1 ? false : true,
-      loadingCount: state?.loadingCount - 1
-    });
+    const count = Math.max(0, state.loadingCount - 1);
+    ctx.patchState({ status: count > 0, loadingCount: count });
   }
 
   @Action(ShowButtonSpinnerAction)
-  public showButtonSpinnerAction(ctx: StateContext<LoaderStateModel>, action: ShowButtonSpinnerAction) {
+  public showButtonSpinnerAction(
+    ctx: StateContext<LoaderStateModel>,
+    action: ShowButtonSpinnerAction
+  ) {
     const state = ctx.getState();
     ctx.patchState({ ...state, button_spinner: action?.loading });
   }
@@ -64,5 +72,4 @@ export class LoaderState {
     const state = ctx.getState();
     ctx.patchState({ ...state, button_spinner: false });
   }
-  
 }

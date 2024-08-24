@@ -14,14 +14,20 @@ export class OrderService {
   constructor(private http: HttpClient) {}
 
   getOrders(payload?: Params): Observable<OrderModel> {
-    console.log('order payload: ', payload);
+    console.log('get order', payload);
     return this.http.get<OrderModel>(`${this.baseUrl}/orders/get_orders`, {
       params: payload,
     });
   }
 
   placeOrder(payload: any): Observable<any> {
-    console.log(payload);
     return this.http.post(`${this.baseUrl}/orders/create_order`, payload);
+  }
+
+  verifyPayment(payload: any): Observable<any> {
+    return this.http.post(
+      `${environment.baseURL}/orders/verify-payment`,
+      payload
+    );
   }
 }

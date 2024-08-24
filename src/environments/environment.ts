@@ -7,6 +7,8 @@ export const environment = {
   baseURL: 'http://localhost:3000/api',
   URL: 'http://localhost:4200/assets/data',
   fileUrl: 'http://localhost:3000/public/productimages/',
+  bannerUrl: 'http://localhost:3000/public/admin/banners/',
+  razorpayKey: 'rzp_test_sVy9z4G7W6O5Do',
 };
 
 /*

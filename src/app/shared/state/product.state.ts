@@ -76,104 +76,15 @@ export class ProductState {
   @Action(GetProducts)
   getProducts(ctx: StateContext<ProductStateModel>, action: GetProducts) {
     this.productService.skeletonLoader = true;
-    // Note :- You must need to call api for filter and pagination as of now we are using json data so currently get all data from json
-    //          you must need apply this logic on server side
     return this.productService.getProducts(action.payload).pipe(
       tap({
         next: (result: ProductModel) => {
+          console.log('products: ', result);
           let products = result.data || [];
           if (action?.payload) {
-            // Note:- For Internal filter purpose only, once you apply filter logic on server side then you can remove  it as per your requirement.
-            // Note:- we have covered only few filters as demo purpose
-            products = result.data.filter(
-              (product) =>
-                (action?.payload?.['store_slug'] &&
-                  product?.store?.slug == action?.payload?.['store_slug']) ||
-                (action?.payload?.['category'] &&
-                  product?.categories?.length &&
-                  product?.categories?.some((category) =>
-                    action?.payload?.['category']
-                      ?.split(',')
-                      ?.includes(category.slug)
-                  ))
-            );
-
             products = products.length ? products : result.data;
-
-            if (action?.payload?.['sortBy']) {
-              if (action?.payload?.['sortBy'] === 'asc') {
-                products = products.sort((a, b) => {
-                  if (a.id < b.id) {
-                    return -1;
-                  } else if (a.id > b.id) {
-                    return 1;
-                  }
-                  return 0;
-                });
-              } else if (action?.payload?.['sortBy'] === 'desc') {
-                products = products.sort((a, b) => {
-                  if (a.id > b.id) {
-                    return -1;
-                  } else if (a.id < b.id) {
-                    return 1;
-                  }
-                  return 0;
-                });
-              } else if (action?.payload?.['sortBy'] === 'a-z') {
-                products = products.sort((a, b) => {
-                  if (a.name < b.name) {
-                    return -1;
-                  } else if (a.name > b.name) {
-                    return 1;
-                  }
-                  return 0;
-                });
-              } else if (action?.payload?.['sortBy'] === 'z-a') {
-                products = products.sort((a, b) => {
-                  if (a.name > b.name) {
-                    return -1;
-                  } else if (a.name < b.name) {
-                    return 1;
-                  }
-                  return 0;
-                });
-              } else if (action?.payload?.['sortBy'] === 'low-high') {
-                products = products.sort((a, b) => {
-                  if (a.sale_price < b.sale_price) {
-                    return -1;
-                  } else if (a.price > b.price) {
-                    return 1;
-                  }
-                  return 0;
-                });
-              } else if (action?.payload?.['sortBy'] === 'high-low') {
-                products = products.sort((a, b) => {
-                  if (a.sale_price > b.sale_price) {
-                    return -1;
-                  } else if (a.price < b.price) {
-                    return 1;
-                  }
-                  return 0;
-                });
-              }
-            } else if (!action?.payload?.['ids']) {
-              products = products.sort((a, b) => {
-                if (a.id < b.id) {
-                  return -1;
-                } else if (a.id > b.id) {
-                  return 1;
-                }
-                return 0;
-              });
-            }
-
-            if (action?.payload?.['search']) {
-              products = products.filter((product) =>
-                product.name
-                  .toLowerCase()
-                  .includes(action?.payload?.['search'].toLowerCase())
-              );
-            }
+            console.log('product: ', products);
+            console.log('payload: ', action?.payload);
           }
 
           ctx.patchState({

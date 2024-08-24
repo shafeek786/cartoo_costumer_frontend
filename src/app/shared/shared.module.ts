@@ -169,7 +169,7 @@ import { PayModalComponent } from './components/widgets/modal/pay-modal/pay-moda
     ProductDetailModalComponent,
     RefundModalComponent,
     VariantAttributesComponent,
-    PayModalComponent
+    PayModalComponent,
   ],
 
   imports: [
@@ -182,7 +182,7 @@ import { PayModalComponent } from './components/widgets/modal/pay-modal/pay-moda
     NgxSliderModule,
     Select2Module,
     SwiperModule,
-    TranslateModule
+    TranslateModule,
   ],
   providers: [CurrencyPipe],
   exports: [
@@ -229,7 +229,7 @@ import { PayModalComponent } from './components/widgets/modal/pay-modal/pay-moda
     SkeletonProductBoxComponent,
     RefundModalComponent,
     VariantAttributesComponent,
-    PayModalComponent
-  ]
+    PayModalComponent,
+  ],
 })
-export class SharedModule { }
+export class SharedModule {}

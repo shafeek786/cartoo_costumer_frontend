@@ -33,7 +33,6 @@ export class CartComponent {
 
   @Input() style: string = 'basic';
 
-  public fileUrl = environment.fileUrl;
   public cartStyle: string = 'cart_sidebar';
   public shippingFreeAmt: number = 0;
   public cartTotal: number = 0;
@@ -41,6 +40,7 @@ export class CartComponent {
   public confettiItems = Array.from({ length: 150 }, (_, index) => index);
   public confetti: number = 0;
   public loader: boolean = false;
+  public file_url = environment.fileUrl;
 
   constructor(private store: Store, public cartService: CartService) {
     this.store.dispatch(new GetCartItems());
